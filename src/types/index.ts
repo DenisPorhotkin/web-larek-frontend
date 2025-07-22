@@ -8,9 +8,18 @@ export interface IProduct {
   sInCart?: boolean;
 }
 
+export interface ICardTemplate {
+    containerSelector: string;   
+    titleSelector: string;       
+    priceSelector: string;       
+    imageSelector: string;       
+    categorySelector: string;    
+    descriptionSelector?: string;
+    buttonSelector?: string;     
+}
+
 export interface IBasketItem {
   product: IProduct;
-  quantity: number;
 }
 
 export interface IOrder {
@@ -26,7 +35,6 @@ export interface IOrderResult {
     id: string;
     total: number;
     status: 'created' | 'processing' | 'completed' | 'cancelled';
-    createdAt: string;
     items: string[];
     error?: string;
 }
@@ -36,6 +44,20 @@ export interface IOrderForm {
   email?: string;
   phone?: string;
   address?: string;
+}
+
+export interface IContactsForm {
+    email: string;
+    phone: string;
+}
+
+export interface IContactsForm {
+    email: string;
+    phone: string;
+}
+
+export interface ISuccess {
+    total: number;
 }
 
 export interface IAppState {
