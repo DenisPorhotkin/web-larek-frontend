@@ -14,13 +14,13 @@
     background: transparent;
     color: white;
     border: $defaultBorder;
-    border-radius: 1.5rem;
-    padding: 1rem;
+    border-radius: 0.8rem;
+    padding: 1rem 2.5rem;
     font-size: 1.4rem;
     width: 100%;
     box-sizing: border-box;
     outline-color: $secondary;
-
+    
     &:focus {
       outline-style: solid;
     }
@@ -33,5 +33,9 @@
     &::placeholder {
       color: lighten($primaryLight, 23%);
     }
+  }
+
+  &__errors {
+    font-size: 30px
   }
 }

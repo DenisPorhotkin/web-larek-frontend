@@ -1,42 +1,50 @@
+import { ApiPostMethods } from "../components/base/api";
+
 export interface IProduct {
   id: string;
   title: string;
   description: string;
-  image: string;
-  category: ProductCategory;
+  image?: string;
+  category: string;
   price: number | null;
   sInCart?: boolean;
 }
 
-export interface ICardTemplate {
-    containerSelector: string;   
-    titleSelector: string;       
-    priceSelector: string;       
-    imageSelector: string;       
-    categorySelector: string;    
-    descriptionSelector?: string;
-    buttonSelector?: string;     
+export interface IProductsData {
+  total: number;
+  items: IProduct[];
+}
+
+export interface IProductContainer {
+  catalog: HTMLElement[];
+  countProduct: string;
+  locked: boolean;
 }
 
 export interface IBasketItem {
   product: IProduct;
 }
 
+export interface IBasketState {
+  items: string[];
+  total: number;
+}
+
 export interface IOrder {
-  payment: 'online' | 'cash';
-  email: string;
-  phone: string;
-  address: string;
+  payment?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
   total: number;
   items: string[];
 }
 
 export interface IOrderResult {
-    id: string;
-    total: number;
-    status: 'created' | 'processing' | 'completed' | 'cancelled';
-    items: string[];
-    error?: string;
+  id: string;
+  total: number;
+  status: 'created' | 'processing' | 'completed' | 'cancelled';
+  items: string[];
+  error?: string;
 }
 
 export interface IOrderForm {
@@ -47,23 +55,17 @@ export interface IOrderForm {
 }
 
 export interface IContactsForm {
-    email: string;
-    phone: string;
+  email: string;
+  phone: string;
 }
 
-export interface IContactsForm {
-    email: string;
-    phone: string;
+export interface IOrderDataForm {
+  payment: string;
+  address: string;
 }
 
 export interface ISuccess {
-    total: number;
-}
-
-export interface IAppState {
-  catalog: IProduct[];
-  basket: IBasketItem[];
-  order: IOrderForm;
+  total: number;
 }
 
 export interface IValidationRules {
@@ -79,11 +81,17 @@ export interface ValidationRule {
   message: string;
 }
 
-export interface IModal {
-  open(): void;
-  close(): void;
-  setContent(content: HTMLElement): void;
+export interface IApi {
+  baseUrl: string;
+  get<T>(url: string): Promise<T>;
+  post<T>(url: string, data: object, metod?: ApiPostMethods): Promise<T>;
 }
 
-export type FormErrors = Partial<Record<keyof IOrder, string>>;
-export type ProductCategory = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил';
+export interface ApiError {
+  message: string;
+  status?: number;
+  data?: unknown;
+}
+
+export type ValidatableFields = 'payment' | 'email' | 'phone' | 'address';
+export type ValidationFormErrors = Partial<Record<ValidatableFields, string>>;

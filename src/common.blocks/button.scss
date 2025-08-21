@@ -11,10 +11,14 @@
     &:hover {
       border: $hoverBorder;
     }
+    min-width: 316px;
+    font-size: 30px;
+    font-weight: 400;
   }
 
   &_alt-active {
     @include mixins.button(white, $primaryLight, $primaryLight);
     border: $hoverBorder;
+    font-weight: 400;
   }
 }

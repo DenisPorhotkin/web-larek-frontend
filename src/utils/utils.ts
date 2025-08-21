@@ -1,3 +1,5 @@
+import { CATEGORY_MAPPING } from '../utils/constants';
+
 export function pascalToKebab(value: string): string {
     return value.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
 }
@@ -9,6 +11,11 @@ export function isSelector(x: any): x is string {
 export function isEmpty(value: any): boolean {
     return value === null || value === undefined;
 }
+
+export function formatNumber(x: number, sep = ' ') {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+}
+
 
 export type SelectorCollection<T> = string | NodeListOf<Element> | T[];
 
@@ -133,3 +140,4 @@ export function createElement<
     }
     return element;
 }
+

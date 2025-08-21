@@ -4,7 +4,9 @@
 .order {
   @include mixins.flex(column);
   gap: 4rem;
-  margin-bottom: 4rem;
+  margin-bottom: 9rem;
+  margin-top: 2rem;
+  max-width: 1114px;
 
   &__field {
     @include mixins.flex(column);
@@ -15,4 +17,10 @@
     @include mixins.flex(row);
     gap: 1.5rem;
   }
+  
+  &__button {
+    min-width: 249px;
+    font-size: 30px;
+    font-weight: 400;
+  }  
 }
