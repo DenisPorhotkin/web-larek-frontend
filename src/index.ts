@@ -4,7 +4,7 @@ import { ProductStore } from './components/ProductStore';
 import { BasketService } from './components/BasketService';
 import { IApi, IProduct, ApiError, IOrderDataForm, IContactsForm } from './types/index';
 import { Order } from './components/Order';
-import { API_URL, settings } from './utils/constants';
+import { API_URL, settings, validationRules } from './utils/constants';
 import { AppApi } from './components/AppApi';
 import { Api } from './components/base/api';
 import { ProductCard } from './components/ProductCard';
@@ -28,7 +28,6 @@ const templateOrder: HTMLTemplateElement = document.querySelector('#order');
 const templateContacts: HTMLTemplateElement = document.querySelector('#contacts');
 const templateSuccess: HTMLTemplateElement = document.querySelector('#success');
 const mainPage: HTMLElement = document.querySelector('.page__wrapper');
-const buttonModal: HTMLButtonElement = modalContainer.querySelector('.basket__button');
 
 const handleApiError = (error: unknown): ApiError => {
   if (error instanceof Error) {
@@ -40,13 +39,12 @@ const handleApiError = (error: unknown): ApiError => {
   return { message: 'Unknown error' };
 };
 
-const order = new Order();
-
 const baseApi: IApi = new Api(API_URL, settings);
 const api = new AppApi(baseApi);
 
 const events = new EventEmitter();
-const productStore = new ProductStore();
+const productStore = new ProductStore(events);
+const order = new Order(events, validationRules);
 
 const basket = new BasketService(events);
 
@@ -74,7 +72,6 @@ api.getProductList()
         productStore.updateData({
             items: products.items
         });
-        events.emit('catalog:loaded');
     })
     .catch((error: unknown) => {
         const apiError = handleApiError(error);
@@ -82,7 +79,7 @@ api.getProductList()
         events.emit('catalog:error', apiError);
     });
 
-// и заполняем данными главную стрвницу
+// и заполняем данными главную страницу
 events.on('catalog:loaded', () => {
     const cardsArray  = productStore.items.map((card) => {
         const cardInstant = new ProductCard(cloneTemplate(cardTempate), events);
@@ -94,11 +91,11 @@ events.on('catalog:loaded', () => {
 // выбор товара
 events.on('product:select', (product: IProduct) => { 
     const findProduct = productStore.items.find(item => item.id === product.id);
-    const modalCard = new ModalProductCard(cloneTemplate(cardPreviewTemplate), events);
+    const inBasket = basket.contains(product.id);
+    const modalCard = new ModalProductCard(cloneTemplate(cardPreviewTemplate), events, inBasket);
     modalCard.render(findProduct); 
-    modalCard.sInCard = basket.contains(product.id);
     modalProduct.content = modalCard.getContainer();
-    modalProduct.editButton(".card__button", basket.contains(product.id));
+    modalProduct.editButton(".card__button", inBasket);
     modalProduct.open();
 });
 
@@ -140,6 +137,22 @@ events.on('basket:checkout', () => {
     const formAdressPay = new OrderForm(formContent, events);
     modalProduct.content = formAdressPay.render();
     modalProduct.open();
+});
+
+//валидация формы с адресом и способа оплаты
+events.on('order:changed-form', (formData: IOrderDataForm) => {
+    const isValid = order.validateForm(formData);
+    order.payment = formData.payment;
+    order.address = formData.address;    
+    events.emit('order:changed-button', { isValid });
+});
+
+//валидация формы с контактами
+events.on('order:changed-contacts', (formData: IContactsForm) => {
+    const isValid = order.validateForm(formData);
+    order.email = formData.email;
+    order.phone = formData.phone;    
+    events.emit('order:changed-button', { isValid });
 });
 
 //сохраняем адрес и способ оплаты

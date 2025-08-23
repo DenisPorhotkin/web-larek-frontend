@@ -2,7 +2,6 @@ import { Form } from "./common/form";
 import {ensureElement} from "../utils/utils";
 import { EventEmitter } from "./base/events";
 import { IOrderDataForm } from '../types';
-import { validationRules } from '../utils/constants';
 
 export class OrderForm extends Form<IOrderDataForm> {
     protected paymentButtons: HTMLButtonElement[];
@@ -10,7 +9,7 @@ export class OrderForm extends Form<IOrderDataForm> {
     protected _payment: string | undefined;
 
     constructor(container: HTMLElement, events: EventEmitter) {
-        super(container, events, validationRules);
+        super(container, events);      
 
         this._payment = undefined;
         this.paymentButtons = Array.from(container.querySelectorAll('button[name]'));
@@ -22,15 +21,13 @@ export class OrderForm extends Form<IOrderDataForm> {
         this.paymentButtons.forEach(button => {
             button.addEventListener('click', () => {
                 this.payment = button.name;
-                this.validateField('payment', this.payment);
-                this.validateForm();
+                this.events.emit(`order:changed-form`, this.getFormData());
             });
         });
 
         // Валидация адреса при вводе
         this.addressInput.addEventListener('input', () => {
-            this.validateField('address', this.addressInput.value);
-            this.validateForm();
+            this.events.emit(`order:changed-form`, this.getFormData());
         });
     }    
 

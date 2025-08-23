@@ -1,15 +1,14 @@
 import { Form } from "./common/form";
 import {ensureElement} from "../utils/utils";
 import { EventEmitter } from "./base/events";
-import { IContactsForm, ValidatableFields } from '../types';
-import { validationRules } from '../utils/constants';
+import { IContactsForm } from '../types';
 
 export class ContactsForm extends Form<IContactsForm> {
     protected emailInput: HTMLInputElement;
     protected phoneInput: HTMLInputElement;
 
     constructor(container: HTMLElement, events: EventEmitter) {
-        super(container, events, validationRules);
+        super(container, events);
 
         this.emailInput = ensureElement<HTMLInputElement>('input[name="email"]', container);
         this.phoneInput = ensureElement<HTMLInputElement>('input[name="phone"]', container);
@@ -17,13 +16,11 @@ export class ContactsForm extends Form<IContactsForm> {
     }
     private initEventListeners(): void {
         this.emailInput.addEventListener('input', () => {
-            this.validateField('email', this.emailInput.value);
-            this.validateForm();
+            this.events.emit(`order:changed-contacts`, this.getFormData());
         });
 
         this.phoneInput.addEventListener('input', () => {
-            this.validateField('phone', this.phoneInput.value);
-            this.validateForm();
+            this.events.emit(`order:changed-contacts`, this.getFormData());
         });
     }
     protected getFormData(): IContactsForm {

@@ -1,11 +1,12 @@
 import { IProduct, IProductsData } from '../types';
+import { EventEmitter } from './base/events';
 
 export class ProductStore {
     private _data: IProductsData = {
       total: 0,
       items: []
     };
-    constructor(initialData?: IProductsData) {
+    constructor(protected events: EventEmitter, initialData?: IProductsData) {
       if (initialData) {
         this._data = initialData;
       }
@@ -16,6 +17,7 @@ export class ProductStore {
         ...this._data,
         ...newData
       };
+      this.events.emit('catalog:loaded');
     }
 
     get items(): IProduct[] {

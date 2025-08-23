@@ -7,13 +7,14 @@ export class ModalProductCard extends ProductCard {
 
     constructor(
         protected container: HTMLElement,
-        protected events: EventEmitter
+        protected events: EventEmitter,
+        protected InBasket: boolean
     ) {
         super(container, events);
         
         this.button = this.container.querySelector('.card__button');
         this.removeCardClickListener();
-        this._sInCard = this.sInCard;
+        this._sInCard = InBasket;
 
         if (this.button) {
             // Один обработчик для обоих действий

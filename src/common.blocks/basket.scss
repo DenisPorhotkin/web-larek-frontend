@@ -12,6 +12,26 @@
     margin: 0 0 6rem;
     flex-grow: 1;
     font-size: 30px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+  
+    &::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }    
   }
 
   &__button {
@@ -48,4 +68,20 @@
       margin-left: 4rem;
     }
   }
+}
+
+.basket__list {
+  max-height: min(400px, 60vh);
+}
+
+@media (min-height: 1150px) {
+  .basket__list { max-height: min(500px, 65vh); }
+}
+
+@media (min-height: 1280px) {
+  .basket__list { max-height: min(600px, 70vh); }
+}
+
+@media (min-height: 1440px) {
+  .basket__list { max-height: min(700px, 60vh); }
 }

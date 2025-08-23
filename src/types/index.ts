@@ -54,12 +54,12 @@ export interface IOrderForm {
   address?: string;
 }
 
-export interface IContactsForm {
+export interface IContactsForm extends Record<string, string>{
   email: string;
   phone: string;
 }
 
-export interface IOrderDataForm {
+export interface IOrderDataForm extends Record<string, string>{
   payment: string;
   address: string;
 }
